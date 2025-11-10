@@ -44,8 +44,6 @@ export async function PUT(
     })
 
   } catch (err) {
-    console.error('Payment status update error:', err)
-    
     if (err instanceof CopayApiError) {
       return NextResponse.json(
         { error: err.message || 'Failed to update payment status' },

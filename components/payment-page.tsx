@@ -45,12 +45,6 @@ export default function PaymentPage({
   const [error, setError] = useState<string | null>(null)
   const [irembopayLoaded, setIrembopayLoaded] = useState(false)
 
-  console.log('PaymentPage received props:')
-  console.log('- irembopayPublicKey:', irembopayPublicKey)
-  console.log('- irembopayPublicKey length:', irembopayPublicKey?.length)
-  console.log('- irembopayPublicKey type:', typeof irembopayPublicKey)
-  console.log('- paymentInfo.invoiceNumber:', paymentInfo.invoiceNumber)
-
   // Check if IremboPay script is loaded
   useEffect(() => {
     const checkIremboPay = () => {
@@ -111,11 +105,6 @@ export default function PaymentPage({
       return
     }
 
-    console.log('Payment debug info:')
-    console.log('IremboPay public key:', irembopayPublicKey)
-    console.log('Invoice number:', paymentInfo.invoiceNumber)
-    console.log('IremboPay loaded:', irembopayLoaded)
-
     setIsLoading(true)
     setError(null)
 
@@ -133,16 +122,9 @@ export default function PaymentPage({
         invoiceNumber: paymentInfo.invoiceNumber.trim(),
         locale: window.IremboPay.locale.EN,
         callback: (err: unknown, resp: unknown) => {
-          console.log('=== IremboPay Callback Triggered ===')
-          console.log('Error:', err)
-          console.log('Response:', resp)
-          console.log('Error type:', typeof err)
-          console.log('Response type:', typeof resp)
-
           setIsLoading(false)
 
           if (err) {
-            console.error('IremboPay error:', err)
             const errorObj = err as { message?: string; errors?: Array<{ code: string; detail: string }> }
             const errorCallback: IremboPayCallback = {
               success: false,
@@ -150,8 +132,6 @@ export default function PaymentPage({
               invoiceNumber: paymentInfo.invoiceNumber,
               errors: errorObj.errors || [{ code: 'PAYMENT_ERROR', detail: errorObj.message || 'Unknown error' }]
             }
-
-            console.log('Calling onError with:', errorCallback)
             onError(errorCallback)
 
             // Provide more specific error messages
@@ -163,7 +143,6 @@ export default function PaymentPage({
               setError(errorObj.message || 'Payment failed. Please try again.')
             }
           } else {
-            console.log('IremboPay success:', resp)
             const respObj = resp as { message?: string; transactionId?: string; amount?: number }
             const successCallback: IremboPayCallback = {
               success: true,
@@ -173,8 +152,6 @@ export default function PaymentPage({
               amount: respObj.amount
             }
 
-            console.log('Calling onSuccess with:', successCallback)
-            // Call the onSuccess callback which will handle the status update and redirect
             onSuccess(successCallback)
           }
         }
@@ -183,7 +160,6 @@ export default function PaymentPage({
       setIsLoading(false)
       const errorMessage = error instanceof Error ? error.message : 'Payment initialization failed'
       setError(errorMessage)
-      console.error('Payment initiation error:', error)
     }
   }
 
@@ -330,27 +306,6 @@ export default function PaymentPage({
                   </>
                 )}
               </Button>
-
-              {/* Debug Button - Remove this in production */}
-              {process.env.NODE_ENV === 'development' && (
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    console.log('Testing success callback manually...')
-                    const testCallback: IremboPayCallback = {
-                      success: true,
-                      message: 'Test payment successful',
-                      transactionId: 'test_' + Date.now(),
-                      invoiceNumber: paymentInfo.invoiceNumber,
-                      amount: paymentInfo.amount
-                    }
-                    onSuccess(testCallback)
-                  }}
-                  className="w-full"
-                >
-                  🧪 Test Success Callback (Dev Only)
-                </Button>
-              )}
 
               {!canPay && paymentInfo.status === 'PENDING' && (
                 <p className="text-center text-sm text-gray-500">

@@ -30,7 +30,6 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
           throw new Error('Failed to load payment configuration')
         }
         const configData = await configResponse.json()
-        console.log('Loaded config:', configData)
         setConfig(configData)
 
         // Get and sanitize query parameters
@@ -72,8 +71,6 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
 
         setPaymentInfo(payment)
       } catch (err) {
-        console.error('Payment loading error:', err)
-
         if (err instanceof Error) {
           // Parse error message for specific status codes
           if (err.message.includes('401') || err.message.includes('Authentication')) {
@@ -97,14 +94,9 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
   }, [paymentId, searchParams])
 
   const handlePaymentSuccess = async (response: IremboPayCallback) => {
-    console.log('=== handlePaymentSuccess called ===')
-    console.log('Response received:', response)
-    console.log('validatedRequest:', validatedRequest)
-
     try {
       if (validatedRequest) {
         setProcessingCallback(true)
-        console.log('Updating payment status to PROCESSING...')
 
         const statusResponse = await fetch(`/api/payments/${paymentId}/status`, {
           method: 'POST',
@@ -125,18 +117,12 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
         })
 
         if (!statusResponse.ok) {
-          console.error('Failed to update payment status to PROCESSING')
           throw new Error('Failed to update payment status on server')
         }
 
-        // Parse the response to check for success
         const result = await statusResponse.json()
-        console.log('Server response:', result)
 
         if (result.status === 'success') {
-          console.log('Payment status successfully updated to PROCESSING')
-
-          // Only redirect after successful status update
           if (validatedRequest.callback) {
             const url = new URL(validatedRequest.callback)
             url.searchParams.set('status', 'success')
@@ -144,19 +130,14 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
               url.searchParams.set('transactionId', response.transactionId)
             }
             url.searchParams.set('paymentId', paymentId)
-            console.log('Redirecting to callback URL:', url.toString())
             window.location.href = url.toString()
           }
         } else {
           throw new Error(result.message || 'Server returned error status')
         }
-      } else {
-        console.log('Missing validatedRequest for callback')
       }
-    } catch (error) {
-      console.error('Failed to update payment status:', error)
+    } catch {
       setProcessingCallback(false)
-      // Show error to user since we couldn't update the backend
       alert('Payment was processed but there was an error updating the system. Please contact support.')
     }
   }
@@ -165,7 +146,6 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
     try {
       if (validatedRequest) {
         setProcessingCallback(true)
-        console.log('Updating payment status to FAILED...')
 
         const statusResponse = await fetch(`/api/payments/${paymentId}/status`, {
           method: 'POST',
@@ -184,31 +164,23 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
           }),
         })
 
-        if (!statusResponse.ok) {
-          console.error('Failed to update payment status to FAILED')
-          // Still redirect even if status update fails
-        } else {
+        if (statusResponse.ok) {
           const result = await statusResponse.json()
-          console.log('Server response:', result)
-
-          if (result.status === 'success') {
-            console.log('Payment status successfully updated to FAILED')
+          if (result.status !== 'success') {
+            // Log but don't block redirect
           }
         }
 
-        // Redirect to callback URL with failure status after attempting status update
+        // Redirect to callback URL with failure status
         if (validatedRequest.callback) {
           const url = new URL(validatedRequest.callback)
           url.searchParams.set('status', 'failed')
           url.searchParams.set('error', error.message || 'Payment failed')
           url.searchParams.set('paymentId', paymentId)
-          console.log('Redirecting to callback URL with error:', url.toString())
           window.location.href = url.toString()
         }
       }
-    } catch (updateError) {
-      console.error('Failed to update payment status:', updateError)
-
+    } catch {
       // Still redirect to callback URL even if status update fails
       if (validatedRequest && validatedRequest.callback) {
         const url = new URL(validatedRequest.callback)

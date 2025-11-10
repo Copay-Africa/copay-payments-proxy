@@ -201,8 +201,7 @@ export class CopayApiClient {
       clearTimeout(timeoutId);
 
       return response.ok;
-    } catch (error) {
-      console.error("Organization access validation failed:", error);
+    } catch {
       return false;
     }
   }
