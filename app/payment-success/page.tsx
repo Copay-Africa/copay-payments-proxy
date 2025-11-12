@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { CheckCircle, Smartphone, ExternalLink } from 'lucide-react'
+import { CheckCircle, Smartphone, ExternalLink, Loader2 } from 'lucide-react'
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
     const searchParams = useSearchParams()
     const [countdown, setCountdown] = useState(5)
     const [redirectStarted, setRedirectStarted] = useState(false)
@@ -157,5 +157,31 @@ export default function PaymentSuccessPage() {
                 </Card>
             </div>
         </div>
+    )
+}
+
+function LoadingFallback() {
+    return (
+        <div className="min-h-screen bg-linear-to-br from-green-50 to-emerald-100 p-4">
+            <div className="mx-auto max-w-md mt-20">
+                <Card className="text-center">
+                    <CardContent className="flex items-center justify-center py-12">
+                        <div className="text-center space-y-4">
+                            <Loader2 className="h-8 w-8 animate-spin mx-auto text-green-500" />
+                            <h2 className="text-lg font-semibold text-green-700">Loading Payment Success</h2>
+                            <p className="text-gray-600">Please wait...</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
+    )
+}
+
+export default function PaymentSuccessPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <PaymentSuccessContent />
+        </Suspense>
     )
 }
