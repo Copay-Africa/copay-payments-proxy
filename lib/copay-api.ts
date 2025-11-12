@@ -70,10 +70,28 @@ export class CopayApiClient {
       }
 
       const data = await response.json();
+      console.log('Backend response data:', JSON.stringify(data, null, 2));
 
       // Validate the response against our schema
-      return PaymentInfoSchema.parse(data);
+      try {
+        return PaymentInfoSchema.parse(data);
+      } catch (zodError) {
+        console.error('Schema validation failed:', {
+          zodError,
+          receivedData: data,
+          expectedSchema: 'PaymentInfoSchema'
+        });
+        throw zodError;
+      }
     } catch (error) {
+      console.error("CopayApiClient fetch error:", {
+        url,
+        error,
+        message: error instanceof Error ? error.message : "Unknown error",
+        name: error instanceof Error ? error.name : "Unknown",
+        cause: error instanceof Error ? error.cause : undefined,
+      });
+
       if (error instanceof Error) {
         if (error.name === "AbortError") {
           throw new CopayApiError({
@@ -85,7 +103,7 @@ export class CopayApiClient {
 
         if (error.constructor.name === "ZodError") {
           throw new CopayApiError({
-            message: "Invalid payment data received from backend",
+            message: `Invalid payment data received from backend: ${error.message}`,
             code: "INVALID_DATA",
             status: 502,
           });

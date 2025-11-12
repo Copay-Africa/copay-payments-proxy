@@ -45,34 +45,34 @@ export const PaymentInfoSchema = z.object({
   amount: z.number().positive(),
   status: z.enum(["PENDING", "PROCESSING", "COMPLETED", "FAILED", "CANCELLED"]),
   description: z.string(),
-  dueDate: z.string().datetime(),
+  dueDate: z.string().datetime().nullable().optional(),
   paymentType: z.object({
     id: z.string(),
     name: z.string(),
-    description: z.string(),
-  }),
+    description: z.string().optional(),
+  }).optional(),
   paymentMethod: z.enum([
     "MOBILE_MONEY_MTN",
-    "MOBILE_MONEY_AIRTEL",
+    "MOBILE_MONEY_AIRTEL", 
     "CARD",
     "BANK_TRANSFER",
-  ]),
-  paymentReference: z.string(),
+  ]).optional(),
+  paymentReference: z.string().optional(),
   invoiceNumber: z.string(),
   sender: z.object({
     id: z.string(),
-    firstName: z.string(),
-    lastName: z.string(),
-    phone: z.string(),
-  }),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(), 
+    phone: z.string().optional(),
+  }).optional(),
   cooperative: z.object({
     id: z.string(),
     name: z.string(),
-    code: z.string(),
-  }),
-  paidAt: z.string().datetime().nullable(),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
+    code: z.string().optional(),
+  }).optional(),
+  paidAt: z.string().datetime().nullable().optional(),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
   metadata: z.record(z.string(), z.any()).optional(),
 });
 
@@ -115,12 +115,11 @@ export function sanitizeParams(
 
   for (const [key, value] of Object.entries(params)) {
     if (typeof value === "string") {
-      // Remove potentially dangerous characters
+      // Remove only dangerous HTML/script characters but preserve URL encoding
       const cleaned = value
-        .replace(/[<>"/\\&]/g, "") // Remove HTML/script characters
-        .replace(/[^\w\-@.:/?=&]/g, "") // Allow only safe URL characters
+        .replace(/[<>"']/g, "") // Remove HTML/script characters
         .trim()
-        .slice(0, 500); // Limit length
+        .slice(0, 2000); // Increased length limit for URLs
 
       if (cleaned.length > 0) {
         sanitized[key] = cleaned;
@@ -138,7 +137,7 @@ export function validateOrganizationAccess(
   paymentInfo: PaymentInfo,
   organizationId?: string
 ): boolean {
-  if (!organizationId) {
+  if (!organizationId || !paymentInfo.cooperative) {
     return false;
   }
 
@@ -168,11 +167,14 @@ export function isPaymentValid(paymentInfo: PaymentInfo): {
     return { valid: false, reason: "Payment is currently being processed" };
   }
 
-  const dueDate = new Date(paymentInfo.dueDate);
-  const now = new Date();
+  // Check if payment has expired (only if dueDate is provided)
+  if (paymentInfo.dueDate) {
+    const dueDate = new Date(paymentInfo.dueDate);
+    const now = new Date();
 
-  if (dueDate <= now) {
-    return { valid: false, reason: "Payment has expired" };
+    if (dueDate <= now) {
+      return { valid: false, reason: "Payment has expired" };
+    }
   }
 
   return { valid: true };
