@@ -1,6 +1,6 @@
-# Co-Pay Payment Proxy
+# Copay Payment Proxy
 
-A secure, hosted payment proxy service for the Co-Pay platform using Next.js (App Router) and shadcn/ui. This service handles the payment flow between the Co-Pay backend and IremboPay, providing a web-hosted checkout page that Flutter, Web, and USSD users can all redirect to for secure payment processing.
+A secure, hosted payment proxy service for the Copay platform using Next.js (App Router) and shadcn/ui. This service handles the payment flow between the Copay backend and IremboPay, providing a web-hosted checkout page that Flutter, Web, and USSD users can all redirect to for secure payment processing.
 
 ## 🚀 Features
 
@@ -11,7 +11,7 @@ A secure, hosted payment proxy service for the Co-Pay platform using Next.js (Ap
 - **Real-time Validation**: Parameter sanitization and validation for security
 
 ### Security Features
-- **JWT Authentication**: Secure communication with Co-Pay backend
+- **JWT Authentication**: Secure communication with Copay backend
 - **HMAC Signatures**: Alternative authentication method using HMAC
 - **Rate Limiting**: Protection against abuse and DDoS attacks
 - **CSP Headers**: Content Security Policy for XSS protection
@@ -29,7 +29,7 @@ A secure, hosted payment proxy service for the Co-Pay platform using Next.js (Ap
 - Node.js 18+ 
 - npm or yarn
 - IremboPay account and API keys
-- Co-Pay backend URL and authentication secrets
+- Copay backend URL and authentication secrets
 
 ### Setup
 
@@ -59,7 +59,7 @@ HMAC_SECRET=your-super-secret-hmac-key-change-this-in-production
 IREMBOPAY_PUBLIC_KEY=your-irembopay-public-key
 NEXT_PUBLIC_IREMBOPAY_PUBLIC_KEY=your-irembopay-public-key
 
-# Co-Pay Backend Configuration
+# Copay Backend Configuration
 COPAY_BACKEND_URL=https://api.copay.example.com
 ```
 
@@ -78,15 +78,20 @@ npm run dev
 
 **Required Query Parameters**:
 - `invoiceNumber`: IremboPay invoice number
-- `authToken`: JWT authentication token from Co-Pay backend
+- `authToken`: JWT authentication token from Copay backend
 - `callback`: URL to redirect after payment completion
 
 **Optional Parameters**:
 - `locale`: Payment page language (`en`, `fr`, `rw`) - defaults to `en`
+- `deeplink`: Enable deep link redirect for mobile apps (`true`/`false`) - defaults to `false`
 
-**Example**:
-```
+**Examples**:
+```bash
+# Regular web redirect
 GET /pay/12345?invoiceNumber=INV001&authToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...&callback=https://app.copay.com/payment-success
+
+# Deep link redirect for Flutter/mobile apps
+GET /pay/12345?invoiceNumber=INV001&authToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...&callback=https://app.copay.com/payment-success&deeplink=true
 ```
 
 ### Authentication
@@ -95,7 +100,7 @@ The service supports two authentication methods:
 
 #### 1. JWT Authentication (Recommended)
 ```javascript
-// Co-Pay backend generates JWT token
+// Copay backend generates JWT token
 const token = jwt.sign({
   sub: 'user-id',
   organizationId: 'org-123',
@@ -121,7 +126,7 @@ const signature = hmac('sha256', HMAC_SECRET)
 | `HMAC_SECRET` | Yes | Secret key for HMAC signature validation |
 | `IREMBOPAY_PUBLIC_KEY` | Yes | Public key from IremboPay dashboard |
 | `NEXT_PUBLIC_IREMBOPAY_PUBLIC_KEY` | Yes | Public key for client-side IremboPay widget |
-| `COPAY_BACKEND_URL` | Yes | Base URL of Co-Pay backend API |
+| `COPAY_BACKEND_URL` | Yes | Base URL of Copay backend API |
 | `COPAY_BACKEND_TIMEOUT` | No | API request timeout (default: 30000ms) |
 
 ### Security Headers
@@ -139,19 +144,19 @@ The service automatically applies security headers:
 
 ## 🔄 Payment Flow
 
-1. **User Initiation**: User initiates payment on Co-Pay application
-2. **Token Generation**: Co-Pay backend generates JWT token with payment details
+1. **User Initiation**: User initiates payment on Copay application
+2. **Token Generation**: Copay backend generates JWT token with payment details
 3. **Redirect**: User redirected to payment proxy with payment ID and parameters
 4. **Validation**: Payment proxy validates token and fetches payment info
 5. **Payment Page**: Secure payment page displayed with IremboPay widget
 6. **Payment Processing**: User completes payment through IremboPay
-7. **Status Update**: Payment status updated in Co-Pay backend
-8. **Callback**: User redirected back to Co-Pay application
+7. **Status Update**: Payment status updated in Copay backend
+8. **Callback**: User redirected back to Copay application
 
 ## 🛡️ Security Considerations
 
 ### Authentication
-- All requests to Co-Pay backend include JWT tokens or HMAC signatures
+- All requests to Copay backend include JWT tokens or HMAC signatures
 - Tokens have short expiration times (15 minutes)
 - Payment IDs and invoice numbers must match exactly
 
@@ -232,10 +237,10 @@ This project is licensed under the MIT License.
 
 For support and questions:
 - Create an issue in the repository
-- Contact the Co-Pay development team
+- Contact the Copay development team
 
 ---
 
-**Built with ❤️ by the Co-Pay Team**
+**Built with ❤️ by the Copay Team**
 
-http://localhost:4000/pay/6911a7fecd4b2ef2f5dd58e7?invoiceNumber=881110978366&authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OGYwY2M4YWRjZWI1ZTE2ZDU3YzkzOGIiLCJwaG9uZSI6IisyNTA3ODgxMTEyMjQiLCJyb2xlIjoiVEVOQU5UIiwiY29vcGVyYXRpdmVJZCI6IjY4ZjBjYjRiZGNlYjVlMTZkNTdjOTM4OSIsImlhdCI6MTc2MjY5NDI1NiwiZXhwIjoxNzYzMjk5MDU2fQ.CYlYawUjhewT2J_LZryu48sUB_fPY9LLoPe1G5xMbeo&callback=http://localhost:4000
+https://copay-payment-proxy.vercel.app/pay/6911f0c5e4268bab14d0f368?invoiceNumber=881110896035&authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OGYwY2M4YWRjZWI1ZTE2ZDU3YzkzOGIiLCJwaG9uZSI6IisyNTA3ODgxMTEyMjQiLCJyb2xlIjoiVEVOQU5UIiwiY29vcGVyYXRpdmVJZCI6IjY4ZjBjYjRiZGNlYjVlMTZkNTdjOTM4OSIsImlhdCI6MTc2MjY5NDI1NiwiZXhwIjoxNzYzMjk5MDU2fQ.CYlYawUjhewT2J_LZryu48sUB_fPY9LLoPe1G5xMbeo&callback=https://copay-payment-proxy.vercel.app

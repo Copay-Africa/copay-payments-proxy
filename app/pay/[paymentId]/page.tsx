@@ -21,8 +21,8 @@ export async function generateMetadata({ params }: PaymentPageProps): Promise<Me
   const { paymentId } = await params
   
   return {
-    title: `Payment ${paymentId} - Co-Pay`,
-    description: 'Secure payment processing powered by Co-Pay and IremboPay',
+    title: `Payment ${paymentId} - Copay`,
+    description: 'Secure payment processing powered by Copay and IremboPay',
     robots: 'noindex, nofollow', // Prevent indexing of payment pages
   }
 }

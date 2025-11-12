@@ -8,9 +8,9 @@ export default function HomePage() {
       <div className="mx-auto max-w-4xl space-y-8 pt-16">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-gray-900">Co-Pay Payment Proxy</h1>
+          <h1 className="text-4xl font-bold text-gray-900">Copay Payment Proxy</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Secure payment processing service for the Co-Pay platform, powered by IremboPay
+            Secure payment processing service for the Copay platform, powered by IremboPay
           </p>
           <Badge variant="default" className="text-sm">
             Production Ready
@@ -66,7 +66,7 @@ export default function HomePage() {
                 Multi-Platform
               </CardTitle>
               <CardDescription>
-                Compatible with all Co-Pay client platforms
+                Compatible with all Copay client platforms
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -105,7 +105,7 @@ export default function HomePage() {
           <CardHeader>
             <CardTitle>API Usage</CardTitle>
             <CardDescription>
-              How to integrate with the Co-Pay Payment Proxy
+              How to integrate with the Copay Payment Proxy
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -129,7 +129,7 @@ export default function HomePage() {
         {/* Footer */}
         <div className="text-center text-sm text-gray-500 pb-8">
           <p>
-            Co-Pay Payment Proxy v1.0 • Built with Next.js & IremboPay
+            Copay Payment Proxy v1.0 • Built with Next.js & IremboPay
           </p>
         </div>
       </div>

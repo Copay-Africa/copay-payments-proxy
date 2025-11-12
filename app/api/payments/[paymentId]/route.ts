@@ -22,7 +22,7 @@ export async function GET(
       locale: sanitizedParams.locale || 'en'
     })
 
-    // Fetch payment information from Co-Pay backend
+    // Fetch payment information from Copay backend
     const payment = await getCopayApi().getPaymentInfo(paymentId, requestData.authToken)
     
     // Validate payment is still processable

@@ -41,7 +41,8 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
           invoiceNumber: sanitizedParams.invoiceNumber,
           authToken: sanitizedParams.authToken,
           callback: sanitizedParams.callback,
-          locale: sanitizedParams.locale || 'en'
+          locale: sanitizedParams.locale || 'en',
+          deeplink: sanitizedParams.deeplink === 'true'
         })
 
         setValidatedRequest(requestData)
@@ -123,14 +124,10 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
         const result = await statusResponse.json()
 
         if (result.status === 'success') {
+          // Redirect to success page with parameters for deep link handling
           if (validatedRequest.callback) {
-            const url = new URL(validatedRequest.callback)
-            url.searchParams.set('status', 'success')
-            if (response.transactionId) {
-              url.searchParams.set('transactionId', response.transactionId)
-            }
-            url.searchParams.set('paymentId', paymentId)
-            window.location.href = url.toString()
+            const successUrl = `/payment-success?transactionId=${encodeURIComponent(response.transactionId || '')}&paymentId=${encodeURIComponent(paymentId)}&callback=${encodeURIComponent(validatedRequest.callback)}&deeplink=${validatedRequest.deeplink}`
+            window.location.href = successUrl
           }
         } else {
           throw new Error(result.message || 'Server returned error status')

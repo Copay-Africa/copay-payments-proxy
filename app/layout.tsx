@@ -15,10 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Co-Pay Payment Proxy",
-  description: "Secure payment processing for Co-Pay platform powered by IremboPay",
+  title: "Copay Payment Proxy",
+  description: "Secure payment processing for Copay platform powered by IremboPay",
   keywords: ["payment", "copay", "irembopay", "secure", "rwanda"],
-  authors: [{ name: "Co-Pay Team" }],
+  authors: [{ name: "Copay Team" }],
   robots: "noindex, nofollow",
   other: {
     "X-Frame-Options": "DENY",

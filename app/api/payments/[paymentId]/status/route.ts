@@ -25,7 +25,7 @@ export async function PUT(
       )
     }
 
-    // Update payment status in Co-Pay backend
+    // Update payment status in Copay backend
     await getCopayApi().updatePaymentStatus(
       paymentId,
       status as "PROCESSING" | "COMPLETED" | "FAILED" | "CANCELLED",

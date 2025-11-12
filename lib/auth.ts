@@ -32,7 +32,7 @@ export interface JWTPayload {
 }
 
 /**
- * Generate JWT token for authenticating with Co-Pay backend
+ * Generate JWT token for authenticating with Copay backend
  */
 export function generateJWT(
   payload: Omit<JWTPayload, "iss" | "aud" | "exp" | "iat">
@@ -52,7 +52,7 @@ export function generateJWT(
 }
 
 /**
- * Verify JWT token received from Co-Pay backend
+ * Verify JWT token received from Copay backend
  */
 export function verifyJWT(token: string): JWTPayload | null {
   try {
@@ -117,7 +117,7 @@ export function verifyHMACSignature(
 }
 
 /**
- * Create authorization headers for Co-Pay backend requests
+ * Create authorization headers for Copay backend requests
  */
 export function createAuthHeaders(authToken?: string): Record<string, string> {
   if (authToken) {
@@ -141,7 +141,7 @@ export function createAuthHeaders(authToken?: string): Record<string, string> {
 }
 
 /**
- * Create HMAC headers for Co-Pay backend requests
+ * Create HMAC headers for Copay backend requests
  */
 export function createHMACHeaders(
   method: string,

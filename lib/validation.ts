@@ -36,9 +36,10 @@ export const PaymentRequestSchema = z.object({
   authToken: AuthTokenSchema,
   callback: CallbackUrlSchema,
   locale: z.enum(["en", "fr", "rw"]).optional().default("en"),
+  deeplink: z.boolean().optional().default(false),
 });
 
-// Payment info from Co-Pay backend
+// Payment info from Copay backend
 export const PaymentInfoSchema = z.object({
   id: z.string(),
   amount: z.number().positive(),

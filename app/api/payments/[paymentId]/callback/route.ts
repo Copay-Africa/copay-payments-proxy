@@ -25,7 +25,7 @@ export async function POST(
       )
     }
 
-    // Update payment status in Co-Pay backend via callback endpoint
+    // Update payment status in Copay backend via callback endpoint
     await getCopayApi().updatePaymentStatus(
       paymentId,
       status as "PROCESSING" | "COMPLETED" | "FAILED" | "CANCELLED",
