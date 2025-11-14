@@ -194,14 +194,17 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 p-4">
-        <div className="mx-auto max-w-md mt-20">
-          <Card>
-            <CardContent className="flex items-center justify-center py-12">
+      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 px-4 py-6 sm:p-6">
+        <div className="mx-auto max-w-md mt-12 sm:mt-20">
+          <Card className="shadow-lg">
+            <CardContent className="flex items-center justify-center py-8 sm:py-12">
               <div className="text-center space-y-4">
-                <Loader2 className="h-8 w-8 animate-spin mx-auto" />
-                <h2 className="text-lg font-semibold">Loading Payment</h2>
-                <p className="text-gray-600">Please wait while we prepare your payment...</p>
+                <div className="relative">
+                  <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin mx-auto text-blue-500" />
+                  <div className="absolute inset-0 rounded-full border-2 border-blue-200 animate-pulse"></div>
+                </div>
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Setting up your payment...</h2>
+                <p className="text-sm sm:text-base text-gray-600 px-4">Please wait while we prepare everything for you. This usually takes just a few seconds.</p>
               </div>
             </CardContent>
           </Card>
@@ -213,14 +216,24 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 p-4">
-        <div className="mx-auto max-w-md mt-20">
-          <Card>
-            <CardContent className="py-12">
-              <Alert variant="destructive">
-                <AlertDescription className="text-center">
-                  <strong>Payment Error</strong><br />
-                  {error}
+      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 px-4 py-6 sm:p-6">
+        <div className="mx-auto max-w-md mt-12 sm:mt-20">
+          <Card className="shadow-lg border-red-200">
+            <CardContent className="py-8 sm:py-12">
+              <Alert variant="destructive" className="border-0 bg-red-50">
+                <AlertDescription className="text-center space-y-3">
+                  <div className="text-red-500 text-xl sm:text-2xl mb-2">😟</div>
+                  <div className="font-semibold text-red-800 text-base sm:text-lg">Oops! Something went wrong</div>
+                  <div className="text-sm sm:text-base text-red-700 leading-relaxed px-2">
+                    {error.includes('Authentication') ? 
+                      'It looks like your payment link has expired or is invalid. Please request a new payment link from the app.' :
+                      error.includes('not found') ?
+                      'We couldn\'t find this payment. Please check your payment link or contact support.' :
+                      'We\'re having trouble loading your payment. Please try refreshing the page or contact support if the problem continues.'}
+                  </div>
+                  <div className="text-xs text-red-600 mt-3 p-2 bg-red-100 rounded">
+                    Error: {error}
+                  </div>
                 </AlertDescription>
               </Alert>
             </CardContent>
@@ -243,13 +256,21 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
 
         {/* Processing Callback Overlay */}
         {processingCallback && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <Card className="w-96">
-              <CardContent className="flex items-center justify-center py-12">
+          <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-sm mx-4 shadow-2xl">
+              <CardContent className="flex items-center justify-center py-8 sm:py-12">
                 <div className="text-center space-y-4">
-                  <Loader2 className="h-8 w-8 animate-spin mx-auto" />
-                  <h2 className="text-lg font-semibold">Processing Payment</h2>
-                  <p className="text-gray-600">Please wait while we confirm your payment...</p>
+                  <div className="relative">
+                    <Loader2 className="h-10 w-10 sm:h-12 sm:w-12 animate-spin mx-auto text-green-500" />
+                    <div className="absolute inset-0 rounded-full border-2 border-green-200 animate-pulse"></div>
+                  </div>
+                  <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Processing your payment...</h2>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed px-2">
+                    Please don't close this page. We're confirming your payment with our secure servers.
+                  </p>
+                  <div className="text-xs text-gray-500 mt-2">
+                    This usually takes less than 30 seconds
+                  </div>
                 </div>
               </CardContent>
             </Card>

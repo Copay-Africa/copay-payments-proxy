@@ -84,73 +84,104 @@ function PaymentSuccessContent() {
     }
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-green-50 to-emerald-100 p-4">
-            <div className="mx-auto max-w-md mt-20">
-                <Card className="text-center">
-                    <CardHeader>
+        <div className="min-h-screen bg-linear-to-br from-green-50 to-emerald-100 px-4 py-6">
+            <div className="mx-auto max-w-md mt-12 sm:mt-20">
+                <Card className="text-center shadow-xl border-green-200">
+                    <CardHeader className="pb-4">
                         <div className="mx-auto mb-4">
-                            <CheckCircle className="h-16 w-16 text-green-500" />
+                            <div className="relative">
+                                <CheckCircle className="h-16 w-16 sm:h-20 sm:w-20 text-green-500 mx-auto" />
+                                <div className="absolute inset-0 rounded-full bg-green-100 animate-ping opacity-20"></div>
+                            </div>
                         </div>
-                        <CardTitle className="text-2xl text-green-700">
-                            Payment Successful!
+                        <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-700">
+                            🎉 Payment Successful!
                         </CardTitle>
+                        <div className="text-sm sm:text-base text-green-600 mt-2 px-2">
+                            Your payment has been processed successfully
+                        </div>
                     </CardHeader>
-                    <CardContent className="space-y-6">
+                    <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
                         {transactionId && (
-                            <div className="bg-green-50 p-3 rounded-lg">
-                                <p className="text-sm text-green-700 font-medium">
-                                    Transaction ID: {transactionId}
+                            <div className="bg-green-50 p-3 sm:p-4 rounded-lg border border-green-200">
+                                <div className="text-xs uppercase tracking-wide text-green-600 font-medium mb-1">
+                                    Transaction Reference
+                                </div>
+                                <p className="text-sm sm:text-base text-green-800 font-mono font-semibold break-all">
+                                    {transactionId}
                                 </p>
                             </div>
                         )}
 
-                        <div className="text-gray-600">
-                            <p className="mb-2">Your payment has been processed successfully.</p>
+                        <div className="text-gray-600 space-y-2">
+                            <div className="flex items-center justify-center gap-2 mb-3">
+                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                <span className="text-sm font-medium text-green-700">Transaction Complete</span>
+                            </div>
+                            
                             {countdown > 0 ? (
-                                <p className="text-sm">
-                                    {useDeepLink
-                                        ? `Opening Copay app automatically in ${countdown} seconds...`
-                                        : `Redirecting you back in ${countdown} seconds...`
-                                    }
-                                </p>
+                                <div className="space-y-2">
+                                    <p className="text-sm sm:text-base leading-relaxed">
+                                        {useDeepLink 
+                                            ? `📱 Opening the Copay app automatically in ${countdown} seconds...`
+                                            : `🔄 Taking you back in ${countdown} seconds...`
+                                        }
+                                    </p>
+                                    <div className="w-full bg-gray-200 rounded-full h-2">
+                                        <div 
+                                            className="bg-green-500 h-2 rounded-full transition-all duration-1000"
+                                            style={{ width: `${((5 - countdown) / 5) * 100}%` }}
+                                        ></div>
+                                    </div>
+                                </div>
                             ) : (
-                                <p className="text-sm">
+                                <p className="text-sm sm:text-base">
                                     {useDeepLink
-                                        ? "If the app didn't open, use the buttons below."
-                                        : "Redirecting..."
+                                        ? "📱 If the app didn't open automatically, use the buttons below."
+                                        : "🔄 Redirecting you now..."
                                     }
                                 </p>
                             )}
                         </div>
 
                         {useDeepLink && (
-                            <div className="space-y-3">
+                            <div className="space-y-3 sm:space-y-4">
                                 <Button
                                     onClick={handleOpenApp}
-                                    className="w-full bg-blue-600 hover:bg-blue-700"
+                                    className="w-full h-12 sm:h-14 bg-blue-600 hover:bg-blue-700 transition-all duration-200 shadow-lg"
                                     size="lg"
                                 >
-                                    <Smartphone className="mr-2 h-5 w-5" />
-                                    Open Copay App
+                                    <div className="flex items-center gap-3">
+                                        <Smartphone className="h-5 w-5 sm:h-6 sm:w-6" />
+                                        <span className="text-base sm:text-lg font-semibold">Open Copay App</span>
+                                    </div>
                                 </Button>
 
                                 {callbackUrl && (
                                     <Button
                                         onClick={handleOpenWeb}
                                         variant="outline"
-                                        className="w-full"
+                                        className="w-full h-12 sm:h-14 border-2 hover:bg-gray-50 transition-all duration-200"
                                         size="lg"
                                     >
-                                        <ExternalLink className="mr-2 h-5 w-5" />
-                                        Continue in Browser
+                                        <div className="flex items-center gap-3">
+                                            <ExternalLink className="h-5 w-5 sm:h-6 sm:w-6" />
+                                            <span className="text-base sm:text-lg font-semibold">Continue in Browser</span>
+                                        </div>
                                     </Button>
                                 )}
                             </div>
                         )}
 
                         {useDeepLink && (
-                            <div className="text-xs text-gray-500 mt-4">
-                                <p>If you&rsquo;re having trouble opening the app, make sure Copay is installed on your device.</p>
+                            <div className="bg-blue-50 p-3 sm:p-4 rounded-lg border border-blue-200 mt-4">
+                                <div className="flex items-start gap-2">
+                                    <span className="text-blue-500 text-sm">ℹ️</span>
+                                    <div className="text-xs sm:text-sm text-blue-700 leading-relaxed">
+                                        <strong>Need help?</strong> Make sure the Copay app is installed on your device. 
+                                        If you're having trouble, you can always continue in your web browser.
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </CardContent>
@@ -162,14 +193,17 @@ function PaymentSuccessContent() {
 
 function LoadingFallback() {
     return (
-        <div className="min-h-screen bg-linear-to-br from-green-50 to-emerald-100 p-4">
-            <div className="mx-auto max-w-md mt-20">
-                <Card className="text-center">
-                    <CardContent className="flex items-center justify-center py-12">
+        <div className="min-h-screen bg-linear-to-br from-green-50 to-emerald-100 px-4 py-6">
+            <div className="mx-auto max-w-md mt-16 sm:mt-20">
+                <Card className="text-center shadow-lg">
+                    <CardContent className="flex items-center justify-center py-8 sm:py-12">
                         <div className="text-center space-y-4">
-                            <Loader2 className="h-8 w-8 animate-spin mx-auto text-green-500" />
-                            <h2 className="text-lg font-semibold text-green-700">Loading Payment Success</h2>
-                            <p className="text-gray-600">Please wait...</p>
+                            <div className="relative">
+                                <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin mx-auto text-green-500" />
+                                <div className="absolute inset-0 rounded-full border-2 border-green-200 animate-pulse"></div>
+                            </div>
+                            <h2 className="text-lg sm:text-xl font-semibold text-green-700">Loading Payment Success</h2>
+                            <p className="text-sm sm:text-base text-gray-600">Please wait while we prepare your success page...</p>
                         </div>
                     </CardContent>
                 </Card>
