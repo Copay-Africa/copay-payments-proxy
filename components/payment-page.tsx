@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, CreditCard, Building, Calendar, DollarSign } from 'lucide-react'
+import { Loader2, CreditCard, Building, Calendar } from 'lucide-react'
 import { PaymentInfo, IremboPayCallback } from '@/lib/validation'
 
 // Declare IremboPay global
@@ -167,7 +167,7 @@ export default function PaymentPage({
   const canPay = paymentInfo.status === 'PENDING' && !isDueOrExpired
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 px-4 py-6 sm:p-6">
+    <div className="min-h-screen bg-white px-4 py-6 sm:p-6">
       <div className="mx-auto max-w-2xl space-y-4 sm:space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
@@ -179,7 +179,7 @@ export default function PaymentPage({
         </div>
 
         {/* Payment Info Card */}
-        <Card className="shadow-lg">
+        <Card className="shadow-none">
           <CardHeader className="pb-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
@@ -198,8 +198,7 @@ export default function PaymentPage({
             {/* Amount - Prominent Display */}
             <div className="bg-green-50 p-4 sm:p-6 rounded-lg border border-green-200 text-center">
               <div className="text-sm text-green-700 font-medium mb-2">Total Amount</div>
-              <div className="text-3xl sm:text-4xl font-bold text-green-800 flex items-center justify-center gap-2">
-                <DollarSign className="h-6 w-6 sm:h-8 sm:w-8" />
+              <div className="text-3xl sm:text-4xl font-bold text-green-800 text-center">
                 {formatCurrency(paymentInfo.amount)}
               </div>
             </div>
@@ -318,14 +317,11 @@ export default function PaymentPage({
         </Card>
 
         {/* Payment Action */}
-        <Card className="shadow-lg">
+        <Card className="shadow-none">
           <CardContent className="pt-6">
             <div className="space-y-4 sm:space-y-6">
               <div className="text-center space-y-2">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Ready to Pay?</h3>
-                <p className="text-sm sm:text-base text-gray-600 leading-relaxed px-2">
-                  Click the button below to be securely redirected to complete your payment
-                </p>
               </div>
 
               <Button
@@ -360,10 +356,6 @@ export default function PaymentPage({
               
               {/* Security & Trust Indicators */}
               <div className="space-y-2">
-                <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-gray-500">
-                  <span>🔒</span>
-                  <span>Your payment is protected with 256-bit encryption</span>
-                </div>
                 <div className="text-center text-xs text-gray-400">
                   Powered by IremboPay • Trusted by thousands of businesses
                 </div>

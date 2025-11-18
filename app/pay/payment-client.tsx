@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -225,11 +226,11 @@ export default function PaymentClient({ paymentId }: PaymentClientProps) {
                   <div className="text-red-500 text-xl sm:text-2xl mb-2">😟</div>
                   <div className="font-semibold text-red-800 text-base sm:text-lg">Oops! Something went wrong</div>
                   <div className="text-sm sm:text-base text-red-700 leading-relaxed px-2">
-                    {error.includes('Authentication') ? 
+                    {error.includes('Authentication') ?
                       'It looks like your payment link has expired or is invalid. Please request a new payment link from the app.' :
                       error.includes('not found') ?
-                      'We couldn\'t find this payment. Please check your payment link or contact support.' :
-                      'We\'re having trouble loading your payment. Please try refreshing the page or contact support if the problem continues.'}
+                        'We couldn\'t find this payment. Please check your payment link or contact support.' :
+                        'We\'re having trouble loading your payment. Please try refreshing the page or contact support if the problem continues.'}
                   </div>
                   <div className="text-xs text-red-600 mt-3 p-2 bg-red-100 rounded">
                     Error: {error}

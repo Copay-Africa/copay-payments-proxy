@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PaymentPageProps): Promise<Me
 // Loading component
 function PaymentLoading() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen bg-white p-4">
       <div className="mx-auto max-w-md mt-20">
         <Card>
           <CardContent className="flex items-center justify-center py-12">
