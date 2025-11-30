@@ -1,6 +1,6 @@
 {
-  "name": "Copay",
-  "short_name": "Copay",
+  "name": "Copay Proxy",
+  "short_name": "Copay Proxy",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
